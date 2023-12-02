@@ -8,6 +8,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <numeric>
+
 
 std::vector<int> process_string(const std::string& str, std::map<std::string, int> color_ID) {
   std::vector<int> color_count(3);
@@ -32,25 +34,18 @@ int main() {
   std::ifstream file("../input/input_day_02_part1.txt");
   std::string line;
 
-  // We can have at most 12 red cubes, 13 green cubes and 14 blue cubes.
-  const std::vector<int> max_cubes = {12, 13, 14};
   std::map<std::string, int> color_ID;
   color_ID["red"] = 0;
   color_ID["green"] = 1;
   color_ID["blue"] = 2;
 
   if (file.is_open()) {
-
     long long answer = 0;
     while (getline(file, line)) {
       std::vector<int> color_count = process_string(line.substr(line.find(":") + 2), color_ID);
-      long long power = 1;
-      for (int x : color_count) { power *= (long long)x; }
-      answer += power;
+      answer += std::accumulate(color_count.begin(), color_count.end(), 1, std::multiplies<int>());
     }
-
     std::cout << answer << std::endl;
-
     file.close();
   } else {
     std::cout << "Unable to open file" << std::endl;
