@@ -23,7 +23,7 @@ std::vector<bool> group_ids(int n_springs, std::vector<int>& groups) {
   return is_group_end;
 }
 
-int arrangements(std::string condition, std::vector<int>& groups) {
+int64_t arrangements(std::string condition, std::vector<int>& groups) {
 
   // compute total number of hashes
   int n_springs = std::accumulate(groups.begin(), groups.end(), 0);
@@ -37,7 +37,7 @@ int arrangements(std::string condition, std::vector<int>& groups) {
   //     i = index location in the string
   //     j = number of springs already put
   //     k = type character to put: 0 = '.', 1 = '#'
-  auto dp = new int64_t[n + 1][18][2];
+  auto dp = new int64_t[n + 1][17 * 5 + 1][2];
 
   dp[0][0][0] = 1;
 
@@ -77,14 +77,22 @@ int main() {
 
     int64_t answer = 0;
     while (std::getline(input_file, line)) {
-      std::string condition = line.substr(0, line.find(' '));
-      std::stringstream ss(line.substr(line.find(' ')));
+      auto p = line.find(' ');
+      std::string condition = line.substr(0, p);
+      std::stringstream ss(line.substr(p));
 
       int i;
       std::vector<int> counts;
       while (ss >> i) {
         counts.push_back(i);
         if (ss.peek() == ',') ss.ignore();
+      }
+      int nCounts = (int)counts.size();
+
+      // repeat the condition and the counts 4 times more
+      for (int rep = 0; rep < 4; ++rep) {
+        condition += '?' + line.substr(0, p);
+        for (int i = 0; i < nCounts; ++i) { counts.push_back(counts[i]); }
       }
       answer += arrangements(condition, counts);
     }
