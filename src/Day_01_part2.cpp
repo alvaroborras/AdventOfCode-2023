@@ -1,12 +1,12 @@
-//
-// Created by Álvaro Borrás on 28/11/23.
-//
-
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <chrono>
+#include "time_utils.h"
 
 int main() {
+  auto start = std::chrono::high_resolution_clock::now();
+
   std::ifstream input_file("../input/input_day_01_part1.txt");
   std::string line;
 
@@ -15,13 +15,13 @@ int main() {
   int answer = 0;
   if (input_file.is_open()) {
     while (std::getline(input_file, line)) {
-      int bestFirst = line.length(), bestLast = 0;
-      int firstNumber = 0, lastNumber = 0;
+      size_t bestFirst = line.length(), bestLast = 0;
+      size_t firstNumber = 0, lastNumber = 0;
 
       for (int i = 0; i < 10; ++i) {
         // find first and last position of written numbers
-        int firstOccurrence = line.find(numbers[i]);
-        int lastOccurrence = line.rfind(numbers[i]);
+        size_t firstOccurrence = line.find(numbers[i]);
+        size_t lastOccurrence = line.rfind(numbers[i]);
 
         // take the first position
         if (firstOccurrence != std::string::npos && firstOccurrence <= bestFirst) {
@@ -49,11 +49,15 @@ int main() {
           bestLast = lastOccurrence;
         }
       }
-      std::cout << firstNumber << "  " << lastNumber << std::endl;
       answer += 10 * firstNumber + lastNumber;
     }
     input_file.close();
+
     std::cout << answer << std::endl;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << format_duration(diff) << "\n";
   } else {
     std::cout << "Unable to open file";
   }

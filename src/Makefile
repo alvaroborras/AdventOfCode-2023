@@ -1,13 +1,16 @@
 CC = g++
-CFLAGS = -Wall -O3 -march=native -std=c++20
+CFLAGS = -Wall -Wextra -O3 -march=native -std=c++20
 
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+SOURCES = $(TARGET).cpp time_utils.cpp
+OBJECTS = $(SOURCES:.cpp=.o)
 
 all: $(TARGET)
 
-$(TARGET): $(TARGET).o
-	$(CC) $(CFLAGS) $< -o $@
+$(TARGET): $(OBJECTS)
+	$(CC) $(LDFLAGS) -o $@ $^
+
+.cpp.o:
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o $(TARGET)
+	rm -f $(OBJECTS) $(TARGET)

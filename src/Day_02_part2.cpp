@@ -1,15 +1,12 @@
-//
-// Created by Álvaro Borrás on 02/12/23.
-//
-
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <numeric>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <numeric>
-
+#include <chrono>
+#include "time_utils.h"
 
 std::vector<int> process_string(const std::string& str, std::map<std::string, int> color_ID) {
   std::vector<int> color_count(3);
@@ -29,9 +26,11 @@ std::vector<int> process_string(const std::string& str, std::map<std::string, in
   }
   return color_count;
 }
-int main() {
 
-  std::ifstream file("../input/input_day_02_part1.txt");
+int main() {
+  auto start = std::chrono::high_resolution_clock::now();
+
+  std::ifstream input_file("../input/input_day_02_part1.txt");
   std::string line;
 
   std::map<std::string, int> color_ID;
@@ -39,14 +38,19 @@ int main() {
   color_ID["green"] = 1;
   color_ID["blue"] = 2;
 
-  if (file.is_open()) {
+  if (input_file.is_open()) {
     long long answer = 0;
-    while (getline(file, line)) {
+    while (getline(input_file, line)) {
       std::vector<int> color_count = process_string(line.substr(line.find(":") + 2), color_ID);
       answer += std::accumulate(color_count.begin(), color_count.end(), 1, std::multiplies<int>());
     }
     std::cout << answer << std::endl;
-    file.close();
+    input_file.close();
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << format_duration(diff) << "\n";
+
   } else {
     std::cout << "Unable to open file" << std::endl;
   }

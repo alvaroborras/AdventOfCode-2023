@@ -1,7 +1,3 @@
-//
-// Created by Álvaro Borrás on 04/12/23.
-//
-
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -9,11 +5,15 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <chrono>
+#include "time_utils.h"
 
 const std::vector<int> dx = {0, 0, 1, 1, 1, -1, -1, -1};
 const std::vector<int> dy = {1, -1, 1, 0, -1, 1, 0, -1};
 
 int main() {
+  auto start = std::chrono::high_resolution_clock::now();
+
   std::ifstream input_file("../input/input_day_03_part1.txt");
   std::string line;
 
@@ -55,15 +55,18 @@ int main() {
         }
       }
     }
+    input_file.close();
 
     for (auto& [it, v] : count) {
-      std::cout << it.first << " " << it.second << std::endl;
-      for (auto x : v) { std::cout << x << " "; }
-      std::cout << std::endl;
       if (v.size() == 2) { answer += std::accumulate(v.begin(), v.end(), 1, std::multiplies<int>()); }
     }
 
     std::cout << answer << std::endl;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << format_duration(diff) << "\n";
+
   } else {
     std::cout << "Unable to open file";
   }

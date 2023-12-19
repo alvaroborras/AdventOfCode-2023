@@ -10,6 +10,9 @@
 #include <vector>
 
 int main() {
+
+  auto start = std::chrono::high_resolution_clock::now();
+
   std::ifstream input_file("../input/input_day_04_part1.txt");
   std::string line;
 
@@ -38,7 +41,12 @@ int main() {
       idx++;
     }
     input_file.close();
+
     std::cout << answer << std::endl;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Execution time: " << diff.count() << " ms\n";
   } else {
     std::cout << "Unable to open file";
   }

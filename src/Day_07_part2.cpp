@@ -1,7 +1,3 @@
-//
-// Created by Álvaro Borrás on 07/12/23.
-//
-
 #include <fstream>
 #include <iostream>
 #include <numeric>
@@ -10,6 +6,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <chrono>
+#include "time_utils.h"
 
 enum class Type {
   HighCard,
@@ -100,10 +98,12 @@ bool compare_hand(const Hand& A, const Hand& B) {
 }
 
 int main() {
-  std::ifstream input_file("../input/input_day_07_part1.txt");
+  auto start = std::chrono::high_resolution_clock::now();
 
+  std::ifstream input_file("../input/input_day_07_part1.txt");
   std::string cards, line;
   int bid;
+
   if (input_file.is_open()) {
 
     std::vector<Hand> hands;
@@ -117,10 +117,15 @@ int main() {
       hands.emplace_back(h);
     }
     input_file.close();
+
     std::sort(hands.begin(), hands.end(), compare_hand);
     int64_t answer = 0;
     for (size_t i = 0; i < hands.size(); ++i) { answer += hands[i].bid * (i + 1); }
     std::cout << answer << std::endl;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << format_duration(diff) << "\n";
 
   } else {
     std::cout << "Unable to open file";

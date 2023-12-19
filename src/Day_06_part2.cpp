@@ -9,12 +9,16 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include "time_utils.h"
 
 int main() {
-  std::ifstream input_file("../input/input_day_06_part1.txt");
+  auto start = std::chrono::high_resolution_clock::now();
 
+  std::ifstream input_file("../input/input_day_06_part1.txt");
   std::string line;
   const size_t num_races = 4;
+
   if (input_file.is_open()) {
 
     std::stringstream ss;
@@ -30,6 +34,7 @@ int main() {
     ss.str(line.substr(line.find("Distance:") + 9));
     idx = 0;
     while (ss >> i) { races[idx++].second = i; }
+    input_file.close();
 
     auto concatenatePairs = [](const std::vector<std::pair<int64_t, int64_t>>& pairs) {
       return std::accumulate(pairs.begin(), pairs.end(), std::make_pair(0ll, 0ll),
@@ -49,7 +54,10 @@ int main() {
     for (int t = 1; t < x; ++t) { answer += ((x - t) * t) > y; }
     std::cout << answer << std::endl;
 
-    input_file.close();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << format_duration(diff) << "\n";
+
   } else {
     std::cout << "Unable to open file";
   }

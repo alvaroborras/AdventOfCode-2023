@@ -1,20 +1,21 @@
-//
-// Created by Álvaro Borrás on 10/12/23.
-//
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include "time_utils.h"
 
 int main() {
+  auto start = std::chrono::high_resolution_clock::now();
+
   std::ifstream input_file("../input/input_day_11_part1.txt");
 
   if (input_file.is_open()) {
     std::string line;
     std::vector<std::string> galaxies;
     while (std::getline(input_file, line)) { galaxies.push_back(line); }
+    input_file.close();
 
     int nRows = galaxies.size(), nCols = galaxies[1].size();
     // store the positions of the galaxies
@@ -59,6 +60,10 @@ int main() {
       }
     }
     std::cout << answer << std::endl;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << format_duration(diff) << "\n";
 
   } else {
     std::cout << "Unable to open file";

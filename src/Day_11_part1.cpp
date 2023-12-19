@@ -1,14 +1,14 @@
-//
-// Created by Álvaro Borrás on 10/12/23.
-//
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include "time_utils.h"
 
 int main() {
+  auto start = std::chrono::high_resolution_clock::now();
+
   std::ifstream input_file("../input/input_day_11_part1.txt");
 
   if (input_file.is_open()) {
@@ -59,6 +59,10 @@ int main() {
       }
     }
     std::cout << answer << std::endl;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << format_duration(diff) << "\n";
 
   } else {
     std::cout << "Unable to open file";

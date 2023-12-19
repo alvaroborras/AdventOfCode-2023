@@ -1,7 +1,3 @@
-//
-// Created by Álvaro Borrás on 10/12/23.
-//
-
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -9,6 +5,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include "time_utils.h"
 
 std::vector<bool> group_ids(int n_springs, std::vector<int>& groups) {
   std::vector<bool> is_group_end(n_springs + 1);
@@ -70,6 +68,8 @@ int64_t arrangements(std::string condition, std::vector<int>& groups) {
 }
 
 int main() {
+  auto start = std::chrono::high_resolution_clock::now();
+
   std::ifstream input_file("../input/input_day_12_part1.txt");
 
   if (input_file.is_open()) {
@@ -96,8 +96,13 @@ int main() {
       }
       answer += arrangements(condition, counts);
     }
+    input_file.close();
 
     std::cout << answer << std::endl;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << format_duration(diff) << "\n";
 
   } else {
     std::cout << "Unable to open file";

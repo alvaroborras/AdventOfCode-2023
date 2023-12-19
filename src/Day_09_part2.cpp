@@ -1,13 +1,11 @@
-//
-// Created by Álvaro Borrás on 10/12/23.
-//
-
 #include <fstream>
 #include <iostream>
 #include <numeric>
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include "time_utils.h"
 
 int64_t extrapolate(const std::vector<int64_t>& v) {
 
@@ -21,6 +19,9 @@ int64_t extrapolate(const std::vector<int64_t>& v) {
 }
 
 int main() {
+
+  auto start = std::chrono::high_resolution_clock::now();
+
   std::ifstream input_file("../input/input_day_09_part1.txt");
 
   if (input_file.is_open()) {
@@ -33,7 +34,12 @@ int main() {
 
       answer += extrapolate(v);
     }
+    input_file.close();
     std::cout << answer << std::endl;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << format_duration(diff) << "\n";
   } else {
     std::cout << "Unable to open file";
   }

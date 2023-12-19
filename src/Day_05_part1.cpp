@@ -1,14 +1,14 @@
-//
-// Created by Álvaro Borrás on 05/12/23.
-//
-
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <sstream>
 #include <string>
+#include "time_utils.h"
 
 int main() {
+
+  auto start = std::chrono::high_resolution_clock::now();
+
   std::ifstream input_file("../input/input_day_05_part1.txt");
   std::string line;
 
@@ -39,15 +39,21 @@ int main() {
 
       std::stringstream ss(line);
       ss >> dest_range_start >> source_range_start >> range_length;
-      for (int i = 0; i < num_seeds; ++i) {
+      for (size_t i = 0; i < num_seeds; ++i) {
         if (source_range_start <= seeds[i] && seeds[i] < source_range_start + range_length) {
           next_seeds[i] = seeds[i] - source_range_start + dest_range_start;
         }
       }
     }
+    input_file.close();
+
     seeds = next_seeds;
     std::cout << *(std::min_element(seeds.begin(), seeds.end())) << std::endl;
-    input_file.close();
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Execution time: " << diff.count() << " ms\n";
+
   } else {
     std::cout << "Unable to open file";
   }

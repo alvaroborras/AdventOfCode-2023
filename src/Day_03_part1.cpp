@@ -1,10 +1,8 @@
-//
-// Created by Álvaro Borrás on 04/12/23.
-//
-
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <chrono>
+#include "time_utils.h"
 
 inline bool special(char c) { return c != '.' && !('0' <= c && c <= '9'); }
 
@@ -12,6 +10,9 @@ const std::vector<int> dx = {0, 0, 1, 1, 1, -1, -1, -1};
 const std::vector<int> dy = {1, -1, 1, 0, -1, 1, 0, -1};
 
 int main() {
+
+  auto start = std::chrono::high_resolution_clock::now();
+
   std::ifstream input_file("../input/input_day_03_part1.txt");
   std::string line;
 
@@ -43,17 +44,20 @@ int main() {
         }
 
         if (j == nCols - 1 || !isdigit(v[i][j])) {
-          if (specialNumber) {
-            std::cout << "special number found " << curNumber << std::endl;
-            answer += curNumber;
-          }
+          if (specialNumber) { answer += curNumber; }
           curNumber = 0;
           specialNumber = false;
         }
       }
     }
+    input_file.close();
 
     std::cout << answer << std::endl;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Execution time: " << format_duration(diff) << "\n";
+
   } else {
     std::cout << "Unable to open file";
   }
